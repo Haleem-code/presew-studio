@@ -128,6 +128,31 @@ describe('HTTP authentication, state and ownership', () => {
     const fetched = await handler(request(photo.image, 'upload-user'));
     expect(new Uint8Array(await fetched.arrayBuffer())).toEqual(png);
   });
+  test('allows owners to delete their completed try-ons and cleans up result assets', async () => {
+    const handler = createRouter(config, db, auth, images, queue);
+    const asset = await images.put('delete-user', png);
+    const jobId = crypto.randomUUID();
+    const now = new Date().toISOString();
+    await db.run('INSERT INTO render_job(id,user_id,request_id,cache_key,status,input,context,result_asset_id,created_at,updated_at,quota_day,quota_slot) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)', [
+      jobId, 'delete-user', 'req-del-1', 'cache-del-1', 'done', JSON.stringify({ photo: {}, fabric: {}, style: { name: 'Dress' } }), '{}', asset.id, now, now, now.slice(0, 10), 10
+    ]);
+    expect((await handler(request(`/api/renders/${jobId}`, 'bob', 'DELETE'))).status).toBe(404);
+    const del = await handler(request(`/api/renders/${jobId}`, 'delete-user', 'DELETE'));
+    expect(del.status).toBe(200);
+    expect(await del.json()).toEqual({ deleted: true, id: jobId });
+    expect((await handler(request(`/api/renders/${jobId}`, 'delete-user'))).status).toBe(404);
+    expect((await handler(request(`/api/assets/${asset.id}`, 'delete-user'))).status).toBe(404);
+  });
+  test('rejects deleting an in-progress try-on', async () => {
+    const handler = createRouter(config, db, auth, images, queue);
+    const jobId = crypto.randomUUID();
+    const now = new Date().toISOString();
+    await db.run('INSERT INTO render_job(id,user_id,request_id,cache_key,status,input,context,created_at,updated_at,quota_day,quota_slot) VALUES(?,?,?,?,?,?,?,?,?,?,?)', [
+      jobId, 'delete-user', 'req-in-prog', 'cache-in-prog', 'rendering', JSON.stringify({ photo: {}, fabric: {}, style: { name: 'Dress' } }), '{}', now, now, now.slice(0, 10), 11
+    ]);
+    const res = await handler(request(`/api/renders/${jobId}`, 'delete-user', 'DELETE'));
+    expect(res.status).toBe(409);
+  });
 });
 describe('provider request contract', () => {
   test('rejects unsupported database URLs and weak configured secrets', () => {

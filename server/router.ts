@@ -64,6 +64,24 @@ export function createRouter(config: Config, db: Store, auth: AuthService | null
           if (!job) throw new HttpError(404, 'Try-on not found.');
           return reply(publicJob(job));
         }
+        if (path.startsWith('/api/renders/') && request.method === 'DELETE') {
+          const renderId = path.slice('/api/renders/'.length);
+          const job = (await db.all<JobRow>('SELECT * FROM render_job WHERE id=? AND user_id=?', [renderId, userId]))[0];
+          if (!job) throw new HttpError(404, 'Try-on not found.');
+          if (!['done', 'failed', 'needs_review'].includes(job.status)) throw new HttpError(409, 'Wait for this try-on to finish before deleting it.');
+          await db.run('DELETE FROM render_job WHERE id=? AND user_id=?', [renderId, userId]);
+          if (job.result_asset_id) {
+            const others = await db.all<any>('SELECT id FROM render_job WHERE result_asset_id=? AND id!=?', [job.result_asset_id, renderId]);
+            if (!others.length) {
+              const asset = (await db.all<any>('SELECT path FROM private_asset WHERE id=? AND user_id=?', [job.result_asset_id, userId]))[0];
+              if (asset) {
+                await db.run('DELETE FROM private_asset WHERE id=? AND user_id=?', [job.result_asset_id, userId]);
+                await unlink(join(config.storagePath, asset.path)).catch(() => {});
+              }
+            }
+          }
+          return reply({ deleted: true, id: renderId });
+        }
         if (path === '/api/me/data' && request.method === 'DELETE') {
           const pending = (await db.all<any>("SELECT id FROM render_job WHERE user_id=? AND status NOT IN ('done','failed','needs_review') LIMIT 1", [userId]))[0];
           if (pending) throw new HttpError(409, 'Wait for active try-ons to finish before deleting cloud data.');

@@ -1,337 +1,267 @@
-# PreSew Studio 🪡✨
+![PreSew — See it before you sew it](docs/images/brand-banner.svg)
 
-> **"See it before you sew it."**  
-> *The AI-powered personal fashion atelier & bespoke fitting room that bridges custom fabric buying, digital tailoring consultations, and neural garment try-ons.*
+# PreSew
 
-Built for the **[YouCam API: Skin & AI E-commerce Hackathon](https://youcam-api-skin-ai-ecommerce.devpost.com/rules)** using the **Perfect Corp / YouCam AI Suite** (Clothes V4 API, Image Generator V2 API, and File API).
+**Your photo. Your fabric. Your style. See it before you sew it.**
 
----
+PreSew is a mobile-first fashion studio for people planning a custom-made outfit. Bring a photo of yourself, the fabric you want to use, and a style you love. Preview the combination on your own photo before committing to the first cut, then keep the outfit idea and optional measurements together for the next conversation with your tailor.
 
-<p align="center">
-  <img src="public/prew-sew-loading-screen.png" alt="PreSew Loading Screen" width="310" />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="public/pre-sew-mobile.png" alt="PreSew Mobile Studio Interface" width="310" />
-</p>
+Built with TypeScript, Bun, Better Auth, Supabase PostgreSQL, and the YouCam API for the **YouCam API Skin AI & eCommerce VTO Hackathon**.
 
-<p align="center">
-  <em>The PreSew mobile experience: editorial boot screen (left) and the personal studio interface with curated silhouettes and fabrics (right).</em>
-</p>
+**Status:** functional local application; the builder has tested uploads and live try-ons. Production hosting and the public demo-video link are being prepared. A live deployment URL and final video URL have not yet been added to this README.
 
----
+[How it works](#how-it-works) · [YouCam integration](#how-youcam-powers-the-preview) · [Run locally](#run-locally) · [Deploy](#deployment-flyio-or-vercel) · [Demo and submission](#hackathon-demo-and-submission) · [Design notes](DESIGN.md)
 
-## 💡 The Core Problem: The Blind Sewing Dilemma
+## Why PreSew exists
 
-The custom apparel, bespoke tailoring, and artisanal fabric market (from African Ankara, Adire, and Aso Oke to European silks, linens, and bespoke suiting) is a multi-billion-dollar global industry. Yet, it suffers from a fundamental, high-cost friction: **you have to buy and cut the fabric before you know if it looks good on you.**
+For a custom outfit, the usual order is expensive: buy fabric, pick a reference, explain it to a tailor, and find out how it looks after the fabric has already been cut.
 
-### 1. For Normal Everyday Users & Fashion Lovers
-* **Costly Fabric Regret**: Consumers spend $50 to $350+ buying 3 to 6 yards of premium fabric. Once scissors cut the material, it is non-refundable. If the finished dress or two-piece doesn’t suit their figure or skin tone, the money and fabric are lost.
-* **The "Model Disconnect"**: When browsing catalog or Pinterest pictures, shoppers see professional supermodels in studio lighting. A bold geometric Ankara print or ruffled gown that looks stunning on a model can look completely different on a customer's individual body proportions.
-* **Decision Paralysis**: Shoppers hoard fabric bolts in their closets because they cannot picture which silhouette will best highlight the print.
+An Ankara print may look very different on a flowing dress than on a fitted blouse. A screenshot of someone else's outfit does not show what your chosen fabric might look like on you. The cost of misunderstanding is paid in material, time, and alterations.
 
-### 2. For Fashion Designers, Ateliers & Tailors
-* **The Consultation Communication Gap**: Clients frequently bring hand sketches, magazine clippings, or vague Instagram screenshots alongside a bolt of fabric. Bridging what a client *imagines* and what the fabric will *actually look like* is the hardest part of bespoke fashion.
-* **Painful, Unpaid Alterations**: When the finished garment is tried on, clients are often surprised by the print placement or drape, demanding extensive alterations, rework, or even refusing to pay the final balance.
-* **No Unified Digital Handover**: Fit notes and measurements are scattered across paper notebooks, WhatsApp voice notes, and scratchpads, leading to measurement errors and miscommunication between designers and their sewing technicians.
+PreSew moves the visual conversation earlier. It is designed for event attendees planning an owambe look, everyday custom-clothing buyers, and designers helping a consenting client decide what to make. The goal is a more concrete decision before sewing, rather than a promise that an AI picture proves physical fit.
 
----
+## A look inside
 
-## 🌟 The PreSew Solution
+![Desktop studio: editorial fashion imagery and the main creation action](docs/images/studio-desktop.png)
 
-**PreSew Studio** is a Progressive Web App (PWA) and digital atelier that eliminates the guesswork from bespoke tailoring. By pairing user portrait photos, real fabric swatches, and garment silhouettes through a **multi-stage YouCam AI neural pipeline**, PreSew lets clients and designers see photorealistic try-ons before cutting a single thread.
+*The studio uses credited reference photography from Pexels. This screenshot shows the interface, not evidence of AI image quality.*
 
+<details>
+<summary>See the mobile studio</summary>
+
+<img src="docs/images/studio-mobile.png" width="360" alt="PreSew mobile studio with its four-destination bottom navigation" />
+
+</details>
+
+![Interactive fitting room: original comparison, view controls and fabric/style references](docs/images/fitting-room.png)
+
+*The fitting-room screenshot uses catalog imagery as a UI fixture. The final demo should show an approved, real YouCam result and its original inputs.*
+
+## How it works
+
+1. **Start with a photo.** Sign in with Google and upload a clear photo of yourself or a person who has agreed to its use. Framing guidance helps you choose a suitable image.
+2. **Choose the fabric.** Upload a well-lit fabric image or select a catalog reference. Keep it in your library for another outfit.
+3. **Choose the silhouette.** Browse the style collection or upload a supported photo of a finished outfit. Use the same fabric with different styles.
+4. **Review the combination.** Check the original photo, fabric, and style. Add optional notes and a measurement profile. Save an outfit plan or deliberately request a try-on after processing consent.
+5. **Let the server create the look.** The render job and provider task IDs are saved. You can leave the screen and return to its status in **My looks**.
+6. **Look closer.** Open a completed preview in the fitting room. Switch to the original photo, zoom, pan, inspect a subtle perspective view, or download the result.
+
+## What is implemented
+
+| Capability | Current behavior |
+| --- | --- |
+| Original photos | JPG/PNG validation, permission confirmation, reusable photo selection |
+| Fabric and style libraries | Personal uploads, photographic catalog references, search, filters, favorites and source credits |
+| Account access | Google sign-in through Better Auth; profile photo with initials fallback |
+| Account storage | PostgreSQL library state; private disk image files with ownership checks |
+| Real try-on | A two-stage YouCam preparation and Clothes V4 pipeline |
+| Durable job handling | Persisted phases, provider task IDs, idempotency keys, worker leases, per-user cache and daily quotas |
+| Interactive fitting room | Original/result switching, 100–400% zoom, drag/pan, touch-pinch support, keyboard controls and bounded image tilt |
+| My looks | Completed and pending try-ons, saved outfit plans, search and separate filters |
+| Optional measurements | Manual profiles, cm/in display, centimeter storage and validation |
+| Outfit-plan export | Downloadable HTML containing references, notes and optional measurements; print it to PDF in a browser |
+| PWA | Install manifest, public-shell caching, local fonts, safe update prompt, Android/iPhone installation guidance and platform-specific icons |
+
+The fitting room uses one rendered image. **Perspective is not a true 360-degree model.** Back/side generation, model reconstruction, automatic measurements, yardage estimation, agent-written fit advice, group/aso ebi mode and dedicated generated-image/PDF sewing briefs are not implemented. See [DESIGN.md](DESIGN.md) for the path toward true 360 viewing.
+
+## How YouCam powers the preview
+
+The integration is server-side. The browser never receives the provider API key.
+
+| Stage | API used by this code | Purpose |
+| --- | --- | --- |
+| Upload | `POST /s2s/v2.0/file`, then the returned signed PUT request | Upload the selected references and original person photo |
+| Prepare garment | `POST /s2s/v2.0/task/image-to-image/youcam`, model `youcam-image-v2` | Use the style and fabric images together to prepare a garment reference |
+| Try on | `POST /s2s/v2.0/task/cloth-v4` | Apply the prepared garment to the original person photo |
+| Poll | GET the task endpoint with its saved task ID | Advance preparation/rendering without starting another paid task |
+| Store result | Provider result download into private application storage | Retain a result the signed-in owner can reopen |
+
+The preparation instruction asks the model to retain the style's silhouette, neckline, sleeves, seams and hem while applying the fabric's colors and motifs. The try-on request uses the **original person upload**, disables shoe changes, and requests strict person filtering. These are input constraints, not guarantees of perfect identity or print preservation.
+
+Implementation: [provider client](server/youcam.ts), [job state machine](server/jobs.ts), [private images](server/images.ts), and [API routes](server/router.ts). Official reference: [YouCam Clothes V4](https://docs.perfectcorp.com/reference/ai_clothes/v4.0/paths/~1s2s~1v2.0~1task~1cloth-v4/post).
+
+### Reliability and API-unit care
+
+- Explicit consent and a deliberate **Try it on** action precede a submission.
+- Repeated requests use an idempotency key; matching active/successful results can be reused per user.
+- Atomic daily quota slots bound new render jobs. The default is five per user per day, configurable on the server.
+- SQL stores task IDs and progress. A page refresh does not own or restart a provider task.
+- Worker leases coordinate advancement. An uncertain paid submission is held for review rather than blindly repeated.
+- Poll failures can be retried without making another paid generation request.
+
+The two-stage workflow consumes provider units. Live image quality and latency depend on inputs, provider behavior and account access. Do not use an edited wait in a video as a measured performance claim.
+
+## Architecture
+
+```mermaid
+flowchart LR
+  U[Mobile or desktop PWA] -->|Same-origin requests| B[Bun server + Better Auth]
+  U --> L[IndexedDB device library]
+  B --> D[(Supabase PostgreSQL)]
+  B --> S[Private image volume]
+  B --> Q[Persisted render queue]
+  Q --> P[YouCam garment preparation]
+  P --> V[YouCam Clothes V4]
+  V --> S
+  S -->|Authenticated image routes| U
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  Client Photo   │  +  │  Fabric Swatch  │  +  │ Style Reference │
-│  (Real Person)  │     │ (Upload or Shelf│     │(Gown/Suit/Cut)  │
-└────────┬────────┘     └────────┬────────┘     └────────┬────────┘
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 ▼
-         ┌────────────────────────────────────────────────┐
-         │         YouCam AI Preparation Engine           │
-         │  (Image Generator V2: Maps fabric onto style)  │
-         └───────────────────────┬────────────────────────┘
-                                 ▼
-         ┌────────────────────────────────────────────────┐
-         │         YouCam Clothes API V4 Pipeline         │
-         │  (Transfers custom garment onto user portrait) │
-         └───────────────────────┬────────────────────────┘
-                                 ▼
-         ┌────────────────────────────────────────────────┐
-         │   Interactive Fitting Room & Tailor Handover   │
-         │  (Zoom/Pan, Comparison, Measurement Brief PDF) │
-         └────────────────────────────────────────────────┘
-```
 
----
+| Layer | Actual implementation |
+| --- | --- |
+| UI | Browser TypeScript, semantic HTML and responsive CSS; bundled by Bun |
+| API and worker | Bun HTTP server and a periodic render worker |
+| Authentication | Better Auth with Google OAuth; optional Better Auth Infrastructure dashboard |
+| Database | Supabase-hosted PostgreSQL; Bun SQL for app queries and `pg` for Better Auth |
+| Private files | Disk storage under `PRIVATE_STORAGE_PATH`; a persistent volume in production |
+| Local state | IndexedDB; device-to-account import is explicit |
+| Styling | Warm ivory, dark ink and oxblood; self-hosted Manrope and Cormorant Garamond |
 
-## 👥 Built for Both Worlds
+The current implementation is not a Next.js/Elysia/MongoDB scaffold. Earlier product planning may mention that stack; the source above describes what runs now.
 
-| Feature | For Normal Users / Clients | For Fashion Designers / Tailors |
-| :--- | :--- | :--- |
-| **Fabric Testing** | Take a quick photo of fabric at the market or in your closet and test it before buying. | Digitally showcase how your fabric inventory looks made up into garments. |
-| **Style Exploration** | Mix-and-match silhouettes (dresses, peplum tops, agbada, two-piece sets, modern cuts). | Walk clients through silhouette options during intake consultations. |
-| **Body Proportions** | See the clothes rendered directly onto your own face, body, and posture. | Help clients choose cuts that flatter their unique measurements and frame. |
-| **Client Intake** | Save private look ideas and drafts on your phone. | Create separate client profiles with exact centimeter measurements. |
-| **Tailor Handover** | Export a ready-to-sew brief to give your tailor complete clarity. | Generate professional sewing specification sheets for cutting and stitching teams. |
-
----
-
-## 🔄 The Complete Workflow
-
-### Step 1: Start With You (Photo Consent & Upload)
-* The user provides a clear, front-facing portrait or full-body photo.
-* PreSew emphasizes privacy and dignity: original photos are kept private in secure storage, and explicit consent is required before any processing begins.
-
-### Step 2: The Fabric Shelf
-* Users can upload their own fabric photo (e.g., a phone snap of an Ankara wax print, silk brocade, or linen) or select from the curated studio collection.
-* The fabric texture and motifs are analyzed to preserve authentic pattern scale.
-
-### Step 3: Find Your Silhouette
-* Browse curated cuts including *Colour Block Gowns, Studio Tailoring, Two-Piece Sets, Agbada Sets, Tops, and Skirts*, or upload a custom style photograph.
-
-### Step 4: Finishing Touches & Measurement Profiles
-* Attach a client measurement profile (Height, Bust, Waist, Hips, Sleeve, Inseam in metric `cm` or imperial `inches`).
-* Add bespoke tailoring notes (e.g., *"Make the hem floor-length for high heels; add lining to the bodice"*).
-
-### Step 5: The YouCam AI Engine
-1. **File Staging**: The server stages the fabric swatch and garment reference with the YouCam File API.
-2. **Fabric-to-Garment Synthesis**: The server initiates **Image Generator V2**, conditioning the silhouette with the exact pattern and texture of the selected fabric.
-3. **Neural Clothes Try-On**: The resulting garment is passed directly into **YouCam Clothes API V4**, which realistically drapes the garment onto the client's original photo while preserving their facial features, skin tone, hair, and body contour.
-4. **Resilient Background Execution**: A durable polling worker tracks the rendering job with idempotency keys, quotas, and automatic status updates.
-
-### Step 6: Interactive Fitting Room & Tailor Specification Brief
-* **Dual-View Comparison**: Toggle between the original photo and the AI try-on, or zoom in up to 300% to inspect pattern alignment, seamlines, and drape.
-* **Downloadable Outfit Plan**: Export a complete HTML/PDF specification document complete with fabric swatches, reference images, body measurements, and tailor instructions.
-
----
-
-## 🪄 YouCam API Integration Architecture
-
-PreSew relies heavily on the **Perfect Corp / YouCam API** suite to deliver realistic, production-grade e-commerce virtual try-ons:
-
-* **Clothes API V4 (`POST /api/v4/clothes`)**:
-  - Drapes generated garments onto user portraits with strict person filtering.
-  - Automatically preserves human posture, hands, hair, and background context.
-* **Image Generator V2 (`POST /api/v2/image-generator`)**:
-  - Multi-image preparation phase that synthesizes raw fabric swatches into structured 3D garments prior to body fitting.
-* **File Upload API (`POST /api/v1/files`)**:
-  - Securely transmits and caches high-resolution fabric and silhouette assets.
-* **Durable Task Queue (`server/jobs.ts`)**:
-  - Implements an asynchronous finite state machine: `queued` ➔ `prepare_submit` ➔ `preparing` ➔ `tryon_submit` ➔ `rendering` ➔ `done`.
-  - Built-in exponential backoff, worker lease timeouts, idempotency keys, and daily quota management (preventing wasteful paid API re-runs).
-
----
-
-## 🛡️ Security, Privacy & Auth Gating
-
-* **Strict Auth-Gating**: Visitors cannot access the interactive look creation wizard, measurement tools, or private try-on generators without signing in first. Clicking **Try your look** in the studio prompts a dedicated sign-in card.
-* **Google Authentication with Better Auth**: Session authentication powered by Better Auth using secure HTTP-only cookies and cryptographic CSRF tokens.
-* **Multi-Tenant Asset Isolation**: Private photos and generated previews are stored behind authenticated API endpoints (`/api/assets/*` and `/api/renders/*`) that verify account ownership on every request.
-* **Explicit Processing Consent**: Users must actively consent to sending image data to YouCam for virtual try-on processing.
-* **Complete Data Deletion**: Users can purge their cloud studio data, measurement profiles, and try-on history at any time from the account dialog.
-
----
-
-## 🛠️ Technology Stack
-
-* **Frontend**: Vanilla TypeScript, Custom Editorial CSS (*Atelier Design System*), SVG icon system, PWA Service Worker (offline-first public shell).
-* **Backend Runtime**: [Bun](https://bun.sh/) 1.4+ (High-performance native TypeScript HTTP server).
-* **Authentication**: [Better Auth](https://www.better-auth.com/) with Google OAuth.
-* **Database**: [Supabase](https://supabase.com/) PostgreSQL with typed Bun SQL connection pooling and isolated schema namespaces (`presew`, `presew_auth`).
-* **AI Provider**: Perfect Corp YouCam AI API Suite (Clothes V4, Image Generator V2, Files API).
-* **Hosting**: [Fly.io](https://fly.io/) with Docker containerization and persistent NVMe volume storage.
-
----
-
-## 🚀 Step-by-Step Setup & Local Development
+## Run locally
 
 ### Prerequisites
-* [Bun](https://bun.sh/) 1.4 or higher installed.
-* A Google Cloud OAuth Web Application Client ID & Secret.
-* A Perfect Corp / YouCam API Key with Clothes V4 and Image Generator V2 enabled.
-* A Supabase PostgreSQL database URL.
 
-### 1. Clone & Install
-```bash
-git clone https://github.com/YOUR_USERNAME/presew.git
-cd presew
+- Bun 1.4+; the included container pins Bun 1.4.2.
+- A Supabase PostgreSQL connection URI.
+- A Google OAuth **Web application** client.
+- A YouCam API key with access to both preparation and Clothes V4, plus available units.
+
+From this directory:
+
+```powershell
 bun install --frozen-lockfile
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
-### 2. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
+Fill `.env` privately. Keep the generated/existing auth secret; do not paste secrets into source, screenshots or chat.
 
-Fill in the server credentials in `.env`:
-```dotenv
-PORT=3000
-HOST=127.0.0.1
-BETTER_AUTH_URL=http://localhost:3000
-BETTER_AUTH_SECRET=your-random-secret-at-least-32-chars
-GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-YOUCAM_API_KEY=your-youcam-api-key
-DATABASE_URL=postgresql://postgres.xxx:password@aws-0-eu-west-1.pooler.supabase.com:5432/postgres
-PRIVATE_STORAGE_PATH=.data/assets
-MAX_RENDERS_PER_DAY=5
-```
+| Variable | Meaning |
+| --- | --- |
+| `DATABASE_URL` | Required PostgreSQL URI from Supabase → Connect |
+| `BETTER_AUTH_SECRET` | At least 32 random characters; keep stable across deployments using the same database |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Server-side Google OAuth credentials |
+| `YOUCAM_API_KEY` | Server-side YouCam credential |
+| `BETTER_AUTH_URL` | Exact origin users open, including scheme and port |
+| `PORT`, `HOST` | Local listener; use `HOST=0.0.0.0` inside the production container |
+| `PRIVATE_STORAGE_PATH` | Local private file directory; `/data/assets` on the configured Fly volume |
+| `MAX_RENDERS_PER_DAY` | New-job quota, default `5` |
+| `BETTER_AUTH_API_KEY` | Optional Better Auth Infrastructure integration |
+| `BETTER_AUTH_TRUSTED_ORIGINS` | Optional comma-separated additional exact trusted origins |
 
-> **Note**: Add `http://localhost:3000/api/auth/callback/google` as an authorized redirect URI in your Google Cloud Console.
+For port 3000, register `http://localhost:3000/api/auth/callback/google` as a Google redirect URI and set `BETTER_AUTH_URL=http://localhost:3000`. The sample `.env` uses an IPv6 loopback listener; select a host reachable by your browser if needed. Production must use HTTPS.
 
-### 3. Run Migrations & Start Development
-```bash
-# Run PostgreSQL database schema migrations
+```powershell
+bun run setup:check
 bun run db:migrate
-
-# Build assets and start local dev server
 bun run dev
 ```
 
-Open **`http://localhost:3000`** in your browser.
+The dev command builds once, then starts the API and worker. **Restart after source edits.** If a previous PWA shell is cached, accept the in-app **Refresh app** update.
 
-### 4. Running Tests & Production Build
-```bash
-# Run unit and backend integration tests
-bun test
+The database must be PostgreSQL for real startup. SQLite is restricted to isolated automated tests. App tables live in `presew`; Better Auth tables live in `presew_auth`. Keep both schemas unexposed in Supabase's Data API. Migrations enable RLS and revoke client-role access; the backend needs an appropriate database role. See [SETUP.md](SETUP.md) for connection and OAuth details.
 
-# Build production bundle in dist/
-bun run build
+### Commands
+
+| Command | Result |
+| --- | --- |
+| `bun run dev` | Build once and serve the app/API/worker |
+| `bun run build` | Generate brand assets and bundle the frontend into `dist/` |
+| `bun run start` | Serve an existing build with the configured database and worker |
+| `bun test` | Domain, private API, render-state and preview-math tests |
+| `bun run pwa:check` | Validate built manifest icons, dimensions, mask safe areas, Apple/favicon files and cache references; run after build |
+| `bun run setup:check` | Show configured/missing flags without printing secret values |
+| `bun run db:migrate` | Apply application and configured Better Auth schema migrations |
+
+No lint or standalone type-check script is configured. A successful Bun build is not a claim that TypeScript's standalone checker ran.
+
+## PWA and app icons
+
+<img src="public/assets/icon.svg" width="120" alt="PreSew app monogram" />
+
+| Surface | Asset |
+| --- | --- |
+| Android/desktop installation | `app-icon-192.png`, `app-icon-512.png` with manifest purpose `any` |
+| Android adaptive masks | Separate `maskable-icon-192.png` and `maskable-icon-512.png`; full-bleed background and safe-area artwork |
+| iPhone/iPad home screen | `apple-touch-icon.png`, 180 × 180 |
+| Browser tabs | Vector `icon.svg`, 32px PNG fallback and `favicon.ico` |
+
+All platform icons are generated from one rounded P monogram in [create-assets.ts](scripts/create-assets.ts). The previous star motif is removed. Brand colors and the wordmark remain consistent with the in-app header. The manifest identity stays `/`, preserving the application's identity across updates.
+
+Android browsers may offer **Install PreSew**. On iPhone Safari, use **Share → Add to Home Screen**. Already-installed launcher icons may remain cached by the operating system; verify a new installation when checking the revised icons.
+
+The service worker caches only the public shell, brand assets and local fonts. Device drafts can remain available offline. Account APIs, private photos, external catalog photos, authentication and live try-on require connectivity and are not made offline by the shell cache.
+
+## Deployment: Fly.io or Vercel?
+
+**Use Fly.io for the current application.** This is an architectural recommendation: the app already has a Docker build, one same-origin server, a continuously advancing worker and private disk images.
+
+| Concern | Fly.io with the included configuration | Moving the current app to Vercel |
+| --- | --- | --- |
+| Bun server | Run the existing container | Bun is supported, but a Vercel entrypoint/configuration is needed |
+| Render processing | Keep the Machine running for the existing worker | Replace the process timer with a suitable durable worker/workflow setup |
+| Private image files | Mount `/data` as persistent storage | Move uploads/results to durable object storage |
+| Uploads | Current server accepts larger image/library requests | Redesign around direct uploads rather than exceeding Function payload limits |
+| Authentication | Frontend and API remain on one origin | Keep one origin or carefully configure proxy, cookies and trusted origins |
+| Work before the hackathon | Configure and validate the existing packaging | Additional storage, lifecycle and request-path work |
+
+[Vercel supports Bun Functions](https://vercel.com/docs/functions/runtimes/bun), so Bun itself is not the obstacle. Its documented [Function payload limit](https://vercel.com/docs/functions/limitations#request-body-size) matters to this image workflow. [Fly Volumes](https://fly.io/docs/volumes/overview/) fit the current disk adapter, although one Machine/volume is not a high-availability design.
+
+Follow [DEPLOY.md](DEPLOY.md) for exact commands. Replace the placeholder app name and production auth URL in `fly.toml`; set server secrets; add the final Google callback URI; migrate any existing private files; and deploy with one Machine. Do not import a local tunnel `.env` wholesale into production.
+
+Existing images are **not** stored inside Supabase image storage. If production reuses the current database, transfer local private files to the Fly volume while preserving filenames. Retain backups. Move to shared object storage before horizontal scaling; separate Machines do not automatically share a volume's contents.
+
+`GET /api/health` checks database connectivity plus initialized authentication and render processing. A healthy response does not prove Google callbacks or YouCam account permissions work: complete the live checks before sharing the URL.
+
+## Hackathon demo and submission
+
+PreSew targets the fashion/eCommerce VTO direction of the [YouCam hackathon](https://youcam-api-skin-ai-ecommerce.devpost.com/). The specific value is helping custom-clothing buyers evaluate their own fabric/style decision before sewing. Clothes V4 is the qualifying fashion integration; garment preparation is an additional implemented step. Skin analysis and makeup are not claimed features.
+
+The [official rules](https://youcam-api-skin-ai-ecommerce.devpost.com/rules) require a working YouCam-integrated project, code access, a description and an end-to-end 1–3 minute video. The overview also asks for screenshots. This repository supplies setup, implementation explanations and UI images; real result evidence and reviewer access must be completed in the final submission.
+
+Submission cutoff shown on October 22, 2026: **November 2, 2026, 11:45 a.m. EST / 5:45 p.m. WAT in Lagos.** Aim to submit November 1. Verify the live event page again before submitting.
+
+For the video, show a real mobile workflow: original photo → fabric → style → consent → provider processing → completed result → original comparison → saved look. Identify the two YouCam stages. Label shortened waiting and use approved people/assets. Do not present the catalog fixture screenshots above as actual AI results, or image tilt as a 360 reconstruction.
+
+Before submission, add the deployed app URL and publicly viewable video URL near the top of this README, confirm repository access/licensing, and provide practical judging instructions. Make sure the Google OAuth audience/test-user configuration lets reviewers sign in and that the account has enough provider units for evaluation. Never publish private credentials or provider keys in the README.
+
+## Privacy and limitations
+
+- Images are sent to YouCam only after the user requests a try-on and gives processing consent. Private application image routes check ownership and return `private, no-store` responses.
+- Device libraries belong to a browser origin. Import them into the signed-in account explicitly before changing domains if you want them carried across.
+- Removing a library item does not necessarily remove snapshots retained by saved plans or jobs. Users can delete individual try-ons directly from the fitting room, detail dialog, or history cards, which permanently deletes the try-on record and purges unshared output image assets from server storage. The account's cloud-data deletion action removes server studio records and files after active jobs finish.
+- Provider-retained copies and downloaded files are separate. Immediate provider-side deletion and automatic application asset expiry are not implemented. Review the provider's current retention policy for your account before production use.
+- Measurements are entered manually, stored in centimeters, and used in outfit plans. They do not drive the try-on image or establish tailor-grade accuracy.
+- An AI preview can change face/body details, fabric motifs, seams or construction. Compare it with the inputs and confirm physical details with a tailor.
+
+## Validation
+
+The automated suite currently has **25 passing tests** covering measurement boundaries, independent plan snapshots, ownership and origin checks, stale-write conflicts, private image normalization, idempotency/cache/quota behavior, individual try-on deletion with asset cleanup, mocked provider progression/recovery, readiness and preview zoom/pan math.
+
+Production frontend and local Docker builds have passed. The static PWA checker verifies icon sizes and mask-safe artwork. Browser QA used isolated account fixtures for layouts, filters, original comparison, keyboard controls and PWA updates. The builder has separately tested real uploads and try-ons. Physical-phone gestures, newly installed launcher icons, production OAuth, storage migration and live deployment remain launch checks.
+
+Tests do not consume live YouCam units. Screenshots and browser fixtures do not establish live API realism or promise a particular latency.
+
+## Source map
+
+```text
+src/                 Browser screens, shared domain logic, IndexedDB and API client
+  app.ts             Navigation, libraries, creation, account and history UI
+  preview.ts         Interactive fitting-room page and input handling
+  preview-state.ts   Pure zoom/pan/pinch calculations
+server/              Auth, private images, database, API and render worker
+  youcam.ts          File/preparation/Clothes V4 provider client
+  jobs.ts            Persistent render state machine, quotas and recovery
+public/              Styles, manifest, service worker, catalog assets and local fonts
+scripts/             Build, asset generation, setup and PWA checks
+docs/images/         README screenshots and brand banner
+DESIGN.md            Visual direction and honest 360-preview scope
+SETUP.md             Provider/database configuration
+DEPLOY.md            Fly.io launch and migration checklist
 ```
 
----
+## Credits and licensing
 
-## 🐙 Pushing to GitHub
+Catalog photography is sourced from Pexels; individual source/photographer credits are stored in [catalog.ts](src/catalog.ts) and shown in the app. Cormorant Garamond and Manrope are distributed under the SIL Open Font License; their license files are included in `public/fonts/`. Brand assets are code/vector artwork generated for PreSew. Respect the terms of every provider and dependency used by the project.
 
-Follow these exact steps from the `presew/` project root to push the project to your GitHub repository:
-
-```bash
-# 1. Verify git status and ensure secrets (.env) and data (.data/) are ignored
-git status
-
-# 2. Stage all project files
-git add .
-
-# 3. Create your initial commit
-git commit -m "Initial commit: PreSew Studio with YouCam AI virtual try-on"
-
-# 4. Set the branch to main
-git branch -M main
-
-# 5. Add your GitHub remote repository (replace with your repo URL)
-git remote add origin https://github.com/YOUR_USERNAME/presew.git
-
-# 6. Push to GitHub
-git push -u origin main
-```
-
----
-
-## ✈️ Deploying to Fly.io
-
-PreSew includes production-ready [Dockerfile](Dockerfile) and [fly.toml](fly.toml) configurations.
-
-### 1. Log in to Fly CLI
-```bash
-fly auth login
-```
-
-### 2. Choose Your App Name & Create Fly App
-Choose a unique app name on Fly (e.g. `presew-atelier`):
-```bash
-# Set your chosen app name
-$APP_NAME="presew-studio"
-
-# Create the application on Fly.io
-fly apps create $APP_NAME
-```
-
-Update your `fly.toml` to match your app name:
-* `app = "presew-studio"`
-* `BETTER_AUTH_URL = "https://presew-studio.fly.dev"`
-
-### 3. Create the Persistent Storage Volume
-PreSew stores private customer photos and generated AI assets on a dedicated persistent volume:
-```bash
-fly volumes create presew_data --region lhr --size 1 --app $APP_NAME
-```
-
-### 4. Set Production Secrets
-Set your database and API keys securely in Fly.io (these are kept out of source control and Docker builds):
-```bash
-fly secrets set \
-  DATABASE_URL="your_supabase_postgres_url" \
-  BETTER_AUTH_SECRET="your_secure_32_character_secret" \
-  GOOGLE_CLIENT_ID="your_google_client_id" \
-  GOOGLE_CLIENT_SECRET="your_google_client_secret" \
-  YOUCAM_API_KEY="your_youcam_api_key" \
-  --app $APP_NAME
-```
-
-### 5. Update Google OAuth Redirect URI
-In your **Google Cloud Console** under OAuth 2.0 Client IDs, add your production callback URL to the **Authorized redirect URIs** list:
-```
-https://YOUR_APP_NAME.fly.dev/api/auth/callback/google
-```
-
-### 6. Validate & Deploy
-```bash
-# Validate the configuration
-fly config validate --strict
-
-# Deploy to Fly.io (Fly runs 'bun server/migrate.ts' automatically before starting)
-fly deploy --app $APP_NAME --ha=false
-```
-
-### 7. Monitor & Verify Deployment
-```bash
-fly status --app $APP_NAME
-fly checks list --app $APP_NAME
-fly logs --app $APP_NAME
-```
-
-Your live application will be accessible at: **`https://YOUR_APP_NAME.fly.dev`**
-
----
-
-## 📁 Source Code Organization
-
-```
-presew/
-├── public/                 # Static assets, CSS, icons, PWA manifest & screenshots
-│   ├── atelier.css         # Editorial Atelier CSS design system
-│   ├── styles.css          # Base layout, typography and dialog styles
-│   ├── sw.js               # Service Worker for offline public shell caching
-│   ├── pre-sew-mobile.png  # Mobile studio interface screenshot
-│   └── prew-sew-loading-screen.png # Editorial loading boot screen screenshot
-├── src/                    # Frontend client code & domain models
-│   ├── app.ts              # Single-page client router, modal handlers & state
-│   ├── catalog.ts          # Curated reference fabrics and silhouettes
-│   ├── domain.ts           # Pure business logic, measurement math & validation
-│   ├── icons.ts            # Bespoke SVG iconography
-│   ├── preview.ts          # Interactive fitting room viewer (zoom/pan/compare)
-│   └── remote.ts           # Type-safe API client & social sign-in helpers
-├── server/                 # Backend API, Authentication & YouCam AI engine
-│   ├── index.ts            # Bun HTTP server entrypoint & background tick worker
-│   ├── auth.ts             # Better Auth Google configuration & database schema
-│   ├── config.ts           # Environment variable validation & defaults
-│   ├── database.ts         # Supabase PostgreSQL connection & migration runner
-│   ├── images.ts           # Authenticated disk storage & multi-tenant access control
-│   ├── jobs.ts             # Durable state machine for rendering jobs & quotas
-│   ├── router.ts           # API route handlers & static file server
-│   ├── validation.ts       # Strict schema validators & HTTP error types
-│   └── youcam.ts           # Perfect Corp Clothes V4 & Image Generator V2 client
-├── fly.toml                # Fly.io deployment specification
-├── Dockerfile              # Multi-stage Bun build & production runtime image
-└── DEPLOY.md               # Operations & migration checklist
-```
-
----
-
-## ⚖️ License & Credits
-
-* Photography assets in the curated catalog are real reference images sourced from [Pexels](https://www.pexels.com/) under the Pexels license, with photographer credits provided on each asset card.
-* AI virtual try-on and garment generation powered by the **Perfect Corp / YouCam AI Suite**.
-* Developed for the **2026 YouCam API: Skin & AI E-commerce Hackathon**.
+A project-wide source license has not yet been selected. Add an appropriate license before making a public submission, or use the organizer-approved private repository sharing process. Do not imply that the third-party fonts, photographs, YouCam services or dependencies are covered by a future project source license.

@@ -290,7 +290,7 @@ function blobDataUrl(file: Blob): Promise<string> {
 }
 
 function remoteCard(job: RenderJob) {
-  return `<article class="look-card"><button class="look-collage ${job.status === 'done' ? '' : 'job-pending'}" data-action="remote-job" data-id="${job.id}">${job.resultUrl ? `<img src="${e(job.resultUrl)}" alt="Generated preview for ${e(job.name)}" loading="lazy"/>` : `<span class="job-symbol">${icon(job.status === 'failed' || job.status === 'needs_review' ? 'info' : 'studio', 32)}</span>`}<span class="draft-label">${e(jobLabels[job.status] || job.status)}</span></button><div class="asset-caption"><div><h3>${e(job.name)}</h3><p>${new Date(job.createdAt).toLocaleDateString()} · AI try-on</p></div></div></article>`;
+  return `<article class="look-card"><button class="look-collage ${job.status === 'done' ? '' : 'job-pending'}" data-action="remote-job" data-id="${job.id}">${job.resultUrl ? `<img src="${e(job.resultUrl)}" alt="Generated preview for ${e(job.name)}" loading="lazy"/>` : `<span class="job-symbol">${icon(job.status === 'failed' || job.status === 'needs_review' ? 'info' : 'studio', 32)}</span>`}<span class="draft-label">${e(jobLabels[job.status] || job.status)}</span></button><div class="asset-caption"><div><h3>${e(job.name)}</h3><p>${new Date(job.createdAt).toLocaleDateString()} · AI try-on</p></div><button class="icon-button" data-action="delete-remote-job" data-id="${job.id}" aria-label="Delete ${e(job.name)}" title="Delete try-on">${icon('trash', 18)}</button></div></article>`;
 }
 function accountDialog() {
   if (account) {
@@ -306,6 +306,7 @@ function remoteDetail(job: RenderJob) {
   openSheet(`<span class="eyebrow">${e(jobLabels[job.status] || job.status)}</span><h2 id="dialog-title">${e(job.name)}</h2>${job.resultUrl ? `<div class="result-comparison"><figure><img src="${e(job.originalUrl)}" alt="Your original unchanged photo"/><figcaption>Original</figcaption></figure><figure><img src="${e(job.resultUrl)}" alt="AI generated outfit preview"/><figcaption>AI try-on</figcaption></figure></div><p class="small-copy">Compare the face, body proportions and fabric with the originals before sharing. This is a visual preview, not a guarantee of physical fit.</p><button class="button primary full-width" data-action="download-render" data-id="${job.id}">${icon('download', 18)} Download preview</button>` : `<div class="job-progress">${icon(job.status === 'failed' || job.status === 'needs_review' ? 'info' : 'studio', 38)}<h3>${e(jobLabels[job.status] || job.status)}</h3><p>${job.error ? e(job.error) : 'You can leave this screen. Your server keeps the task running, and the result will appear in History.'}</p></div>${button('Refresh status', 'refresh-jobs', 'history', 'button secondary full-width')}`}`);
   shownRemoteJob = job.id;
   if (job.resultUrl) sheet.insertAdjacentHTML('beforeend', `<button class="button secondary full-width" data-action="open-preview" data-id="${e(job.id)}">${icon('expand', 18)} Open interactive preview</button>`);
+  sheet.insertAdjacentHTML('beforeend', `<button class="button danger full-width" data-action="delete-remote-job" data-id="${e(job.id)}">${icon('trash', 17)} Delete this try-on</button>`);
 }
 async function refreshJobs() {
   if (!account) return;
@@ -350,6 +351,24 @@ async function handleAction(action: string, el: HTMLElement) {
   if (action === 'remote-job') {
     if (!account) return requireSignInDialog('Please sign in first to view try-on details.');
     const job = remoteJobs.find(j => j.id === id); if (job?.resultUrl) go(`preview/${job.id}`); else if (job) remoteDetail(job); return;
+  }
+  if (action === 'delete-remote-job') {
+    if (!account) return requireSignInDialog('Please sign in first to manage your try-ons.');
+    const job = remoteJobs.find(j => j.id === id);
+    if (!job) return;
+    if (!confirm(`Delete this try-on (${job.name})? This will permanently remove the generated preview.`)) return;
+    try {
+      await api(`/api/renders/${id}`, undefined, 'DELETE');
+      remoteJobs = remoteJobs.filter(j => j.id !== id);
+      sessionStorage.removeItem('presew-render-request');
+      sheet.close();
+      if (route().startsWith('preview/')) go('history');
+      else render();
+      toast('Try-on deleted.');
+    } catch (error) {
+      toast(error instanceof Error ? error.message : 'Could not delete this try-on. Please try again.');
+    }
+    return;
   }
   if (action === 'refresh-jobs') return refreshJobs();
   if (action === 'download-render') {
