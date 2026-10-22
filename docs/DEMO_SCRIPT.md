@@ -1,137 +1,99 @@
-# PreSew — three-minute mobile product demo
+# PreSew — final three-minute YouTube demo script
 
-Opening: **“This is PreSew.”**
+**Watch the demo:** [PreSew on YouTube](https://youtu.be/g5kmeHbxNL0).
 
-Format: 1080 × 1920 portrait, 30 fps, exactly 03:00. A neutral phone frame surrounds footage of the real mobile web app. Use the browser's mobile viewport; no phone-extension installation is needed. It demonstrates the PWA interface, without claiming the capture came from an installed physical-phone app.
+**Opening:** “This is PreSew.”
 
-Style: warm ivory, oxblood accents, generous typography, gentle transitions, and legible captions. Keep the app visible for most of the running time. Record authentication privately before the take; exclude Google credentials, account chooser and unrelated personal data. Use one approved person, fabric and style consistently through the result.
+**Export:** `outputs/presew-demo/PreSew-YouTube-Final.mp4` — 1920 × 1080, 16:9, 30 fps, exactly 03:00; H.264 video and AAC narration. The mobile web app appears in a neutral phone frame. This is a mobile browser recording, not a claim of physical-phone or installed-PWA capture.
 
-This script describes the planned real-app capture. It does not certify that the final footage has been recorded. Narration and claims must follow the actual behavior captured.
+**Captions:** burned into the video, with a separate synchronized UTF-8 SRT at `outputs/presew-demo/presew-demo-3min.srt`. Narration uses the synthetic Microsoft Sonia voice, with the brand pronounced “Pre Sew.” No third-party music is included.
 
-## Selected demo inputs
+**Sequence:** photo → fabric → style → optional measurements → review/consent → YouCam → interactive preview → saved plan/download. Measurements appear before generation, as requested.
 
-The demo uses a stock model rather than the builder's personal photo. The user requested a freely usable full-length photograph and the existing fabric/style presets. See [DEMO_MEDIA.md](DEMO_MEDIA.md) for the source and license record.
+**Visual direction:** warm ivory, oxblood details, the app’s Cormorant and Manrope fonts, soft scene transitions, a persistent real-app phone view, concise reference panels, and high-contrast captions. Keep the typography readable rather than filling the screen with claims.
 
-- **Person:** full-length model in a white T-shirt and jeans, photographed by Dmitriy Steinke, Pexels photo 17781161. Local upload file: `outputs/presew-demo/demo-model-pexels-17781161.jpg`.
-- **Fabric:** **Festival stripes**, the existing catalog preset (`ankara-sun`), photographed by YESICA CORONADO. The catalog ID is a legacy internal identifier; describe the pictured material as a colorful print, without claiming it is a verified Ankara textile.
-- **Style:** **The flowing dress**, the existing catalog preset (`weekend-set`), photographed by Vika Glitter.
+**Capture source:** [the live Fly.io app](https://presew-studio.fly.dev/). Google sign-in was completed off camera. The camera takes used in the final edit were visually reviewed; failed attempts, personal credentials and unrelated account pages are excluded.
 
-Use a small editorial label, **“Stock model · demonstration”**, when first showing the person and a source credit in the video description. Do not present the model as a customer, testimonial, or endorser. Capture the actual YouCam result from these inputs; the source style photograph is a reference, not a generated result.
+## Timed narration and direction
 
-## Narration and scene timing
+### 00:00–00:09 — See it before you sew it.
 
-### 00:00–00:09 — This is PreSew
+**Visual:** Open on the real signed-in mobile studio. The editorial panel introduces the selected stock model, Festival stripes fabric, and The flowing dress reference. The spoken opening is “This is PreSew.”
 
-**Visual:** wordmark and the mobile studio; introduce the main creation action within the first seconds.
+**Narration:** “This is PreSew. Your photo. Your fabric. Your style. See your next outfit before the first stitch.”
 
-**Voice:** “This is PreSew. Your photo. Your fabric. Your style. See your next outfit before the first stitch.”
+### 00:09–00:24 — Imagine it before you commit.
 
-**Headline:** See it before you sew it.
+**Visual:** Scroll the real studio into its fabric and style collections while explaining the decision that comes before cutting fabric.
 
-### 00:09–00:24 — The decision before sewing
+**Narration:** “A custom outfit begins with a decision. You choose the fabric, save a style, and hope they work together. But by the time you see the result, the fabric may already be cut. PreSew brings that decision forward.”
 
-**Visual:** retain the real studio, then move into fabric/style references. Avoid an extended title-card introduction.
+### 00:24–00:34 — A studio in your pocket.
 
-**Voice:** “A custom outfit begins with a decision. You choose the fabric, save a style, and hope they work together. But by the time you see the result, the fabric may already be cut. PreSew brings that decision forward.”
+**Visual:** Choose Create your look and show the four-step creation flow. Authentication has already happened privately.
 
-**Headline:** Imagine it before you commit.
+**Narration:** “It is a personal fashion studio, designed for your phone. Start a look, bring your references together, and explore the possibility before you commit to sewing.”
 
-### 00:24–00:36 — Your pocket studio
+### 00:34–00:49 — 01 / Start with you.
 
-**Visual:** start a look from the mobile home screen. Keep the labelled navigation and four-step flow visible.
+**Visual:** Use the file picker to select the downloaded, licensed full-body stock photograph. Name it Stock model · demo, save it, confirm permitted use, and continue. The video labels this as a stock demonstration model.
 
-**Voice:** “It is a personal fashion studio, designed for your phone. Start a look, bring your references together, and explore the possibility before you commit to sewing.”
+**Narration:** “First, upload a clear photo of yourself, or someone who has agreed to take part. The guidance helps you frame the person and outfit area. Your original stays unchanged, and every try-on starts from that photo.”
 
-**Headline:** A studio in your pocket.
+### 00:49–01:05 — 02 / A fabric you love.
 
-### 00:36–00:53 — Start with your photo
+**Visual:** Select Festival stripes from the existing catalog. Its colorful print is displayed alongside the real mobile selection state. The internal ID ankara-sun is not evidence that the pictured material is authentic Ankara.
 
-**Visual:** open the photo picker, select the approved photo, show the preview and permission checkbox, then continue. Do not show unrelated folders or files.
+**Narration:** “Next, choose your fabric. Upload a well-lit image of the print you want to use, or explore the collection. Your fabric stays in your library, ready to pair with another style when inspiration changes.”
 
-**Voice:** “First, upload a clear photo of yourself, or someone who has agreed to take part. The guidance helps you frame the person and outfit area. Your original stays unchanged, and every try-on starts from that photo.”
+### 01:05–01:21 — 03 / Make it your own.
 
-**Headline:** 01 / Start with you.
+**Visual:** Select The flowing dress from the built-in style book. Keep the chosen model, fabric and style consistent through the final actual YouCam result.
 
-### 00:53–01:11 — Choose your fabric
+**Narration:** “Now find your silhouette. Browse the style edit, or bring a photo of a finished outfit you love. Combine your own fabric with that reference. The idea belongs to you, rather than being limited to a ready-made product.”
 
-**Visual:** browse the built-in fabric collection, open **Festival stripes**, and select it. Briefly show the upload option as an available alternative; the recorded look uses the preset.
+### 01:21–01:39 — The details that matter.
 
-**Voice:** “Next, choose your fabric. Upload a well-lit image of the print you want to use, or explore the collection. Your fabric stays in your library, ready to pair with another style when inspiration changes.”
+**Visual:** Open Manage measurement profiles → Add measurement profile. Enter Demo profile · sample values and seven manual cm values: height 168, bust/chest 90, waist 72, hips 98, shoulder width 38, sleeve length 58, garment length 140. Save, then show the profile attached in review. These fictional sample numbers were not measured from the stock photo.
 
-**Headline:** 02 / A fabric you love.
+**Narration:** “Next, add optional measurements. Choose centimeters or inches, enter the values, and save a named profile. Attach it to your outfit plan. These are sample numbers, not measurements from the model’s photo. Confirm your own values with your tailor.”
 
-### 01:11–01:29 — Find the silhouette
+### 01:39–01:57 — Your idea, together.
 
-**Visual:** open **The flowing dress** from the built-in style collection, select it, show the selected state and continue to review.
+**Visual:** Show the three chosen inputs, the design note, the optional selected measurement profile, and the deliberate YouCam processing-consent checkbox.
 
-**Voice:** “Now find your silhouette. Browse the style edit, or bring a photo of a finished outfit you love. Combine your own fabric with that reference. The idea belongs to you, rather than being limited to a ready-made product.”
+**Narration:** “Review your photo, fabric, and style together. Add a note about the details that matter. Measurements are optional. When you are ready, confirm permission to process the selected images and choose Try it on. You decide when generation begins.”
 
-**Headline:** 03 / Make it your own.
+### 01:57–02:15 — Powered by YouCam.
 
-### 01:29–01:47 — Review, then choose
+**Visual:** Show the actual Try it on action and queue, then cut to the real successful result. The API explanation identifies Image Generator V2 and Clothes V4. The edit combines live-app takes and explicitly labels the shortened wait; it makes no generation-speed claim.
 
-**Visual:** show the selected photo, fabric and style together. Add a short design note if appropriate. Confirm processing consent and deliberately choose Try it on.
+**Narration:** “Behind the preview are two YouCam stages. Image Generator V2 prepares the garment using your fabric and style. Clothes V4 then applies that prepared reference to your original photo. The server saves progress, so you can return to the result.”
 
-**Voice:** “Review your photo, fabric, and style together. Add a note about the details that matter. Measurements are optional. When you are ready, confirm permission to process the selected images and choose Try it on. You decide when generation begins.”
+### 02:15–02:35 — Look closer.
 
-**Headline:** Your idea, together.
+**Visual:** Show the real YouCam-generated dress, switch to the original photograph, return to the result, zoom, drag/pan, enable Perspective, tilt and reset. Explain that this is a single image rather than a reconstructed 360 model.
 
-### 01:47–02:05 — YouCam does the work
+**Narration:** “Here is the look, up close. Switch between the preview and the original. Zoom into the fabric and move around the image. Perspective adds a gentle tilt. It is a single-view preview, so it does not invent a back view or claim to prove physical fit.”
 
-**Visual:** real status progression. Shorten an actual wait with an explicit on-screen label. If a cached completed result is reused, label it as a previously generated YouCam result instead; do not stage a new provider call.
+### 02:35–02:50 — Your ideas, all together.
 
-**Voice:** “Behind the preview are two YouCam stages. Image Generator V2 prepares the garment using your fabric and style. Clothes V4 then applies that prepared reference to your original photo. The server saves progress, so you can return to the result.”
+**Visual:** Use the clean Outfit plans filter in My looks. Open the saved plan containing the three references, notes, and the seven-value sample measurement profile. Choose Download plan. Failed trial cards and error dialogs are excluded from the film.
 
-**Headline:** Powered by YouCam.
+**Narration:** “My looks keeps your generated previews and outfit plans together. Open a saved plan to review the photo, fabric, style, notes, and measurement profile. Download it for a clearer conversation with your tailor.”
 
-### 02:05–02:25 — The fitting room
+### 02:50–03:00 — Your next look starts here.
 
-**Visual:** the real completed result. Switch to the original, switch back, zoom, pan, reset and briefly show perspective.
+**Visual:** End on the actual successful fitting room, the original/result comparison, the live Fly.io URL, and the brand promise: See it before you sew it.
 
-**Voice:** “Here is the look, up close. Switch between the preview and the original. Zoom into the fabric and move around the image. Perspective adds a gentle tilt. It is a single-view preview, so it does not invent a back view or claim to prove physical fit.”
+**Narration:** “Less guesswork. A clearer idea. A look that starts with you. This is PreSew. See it before you sew it.”
 
-**Headline:** Look closer. Decide with more context.
+## Input media and honest claims
 
-### 02:25–02:37 — Keep the possibility
+The full-length model photograph is by Dmitriy Steinke / Pexels (17781161). Fabric: Festival stripes, by YESICA CORONADO (14856268). Style: The flowing dress, by Vika Glitter (27677904). The UI hero photograph is by cottonbro studio (9541934). See [DEMO_MEDIA.md](DEMO_MEDIA.md) for source links and the Pexels license. The model is not presented as a customer or endorser.
 
-**Visual:** return to My looks and reopen the same result. Show download if useful; omit a browser/OS download dialog from the final frame.
+The resulting dress was actually generated through the live app’s YouCam pipeline and downloaded from the completed job. The original model photo remains the input. Measurements are manual sample data and do not drive the AI image. Perspective tilts a single view; it does not show unseen sides/back or establish physical fit. The exported outfit plan contains references, notes and measurements; it is separate from the generated image.
 
-**Voice:** “Your completed try-ons stay together in My looks. Return to a favourite idea, reopen the preview, or download it for your next conversation with a tailor.”
+## Video and submission
 
-**Headline:** Your ideas, all together.
-
-### 02:37–02:50 — Prepare the conversation
-
-**Visual:** an explicitly named example measurement profile and a real saved outfit plan. Show its exported HTML if captured; do not imply it already contains a generated tailor-grade brief.
-
-**Voice:** “Save optional measurements and outfit notes alongside your plan. They help you communicate what you want to make. Confirm measurements and construction with your tailor; the AI image is a visual starting point.”
-
-**Headline:** A clearer conversation with your tailor.
-
-### 02:50–03:00 — Before the first stitch
-
-**Visual:** return to the studio, then a restrained closing wordmark. Include a small synthetic-narration disclosure. Add a live production URL only after deployment is verified.
-
-**Voice:** “Less guesswork. A clearer idea. A look that starts with you. This is PreSew. See it before you sew it.”
-
-**Headline:** Your next look starts here.
-
-## Caption and audio treatment
-
-- Burn readable synchronized captions into the MP4, and export a matching SRT for the host's caption track.
-- Use short sentence fragments, two lines at most, high contrast and a quiet background. Keep them away from the phone's navigation and the main action.
-- A synthetic Microsoft Sonia narration can be used, with disclosure. Do not imitate a real person's voice. The script text is sent to the speech service; it contains no account data or credentials.
-- No commercial soundtrack is needed. Use voice-first audio and restrained, original transition sounds only if they improve clarity.
-- Caption any actual shortened render wait. Avoid a claim that the edit measures generation speed.
-
-## Upload-ready checklist
-
-The [event rules](https://youcam-api-skin-ai-ecommerce.devpost.com/rules) specify a public 1–3 minute video explaining the YouCam integration and showing the target-device experience. Use **YouTube or Vimeo** for this event. The broader Devpost platform can accept other hosts; the event-specific rules take priority.
-
-1. Review the completed video for approved people/assets, exposed credentials and claims that match the app.
-2. Upload the final MP4 to YouTube or Vimeo using the correct account. Select public visibility for the hackathon requirement.
-3. Upload the matching SRT caption file, set English, and check the processed video after upload.
-4. Open the viewing link while signed out. Confirm the full three-minute file is playable and captions work.
-5. Paste the final share URL into the **hackathon submission's** video field before the deadline. Confirm the project-page video too if the two differ.
-
-The final upload/publication remains a separate action. No hosting URL should be claimed until it exists and has been checked.
+The builder supplied the [YouTube demo link](https://youtu.be/g5kmeHbxNL0), now included in the README. Use [YOUTUBE_UPLOAD.md](YOUTUBE_UPLOAD.md) for the description, chapters, source credits, thumbnail and caption file. The finished MP4 is also saved locally. Confirm public playback and add the same URL to the Devpost submission's video field.

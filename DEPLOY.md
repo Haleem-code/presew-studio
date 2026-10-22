@@ -1,6 +1,6 @@
 # Fly.io launch plan
 
-Prepared October 22, 2026. The user has verified real uploads and try-ons locally. This release adds account avatars, mobile UI refinements, installation help, versioned offline caching, and Fly.io deployment files. Deployment has not been performed.
+Prepared October 22, 2026. The application is now live at [presew-studio.fly.dev](https://presew-studio.fly.dev/), deployed by the builder. The production demo session verified Google sign-in, a stock-model upload, a successful two-stage YouCam result, manual measurement entry and downloads. The instructions below remain the deployment and maintenance reference.
 
 The subsequent fashion-design pass and interactive fitting room are documented in [DESIGN.md](DESIGN.md). The latest frontend build and all 23 tests pass. Before deploying, check the new preview page on real phones; its perspective effect is a single-image view, not a true 360 model.
 
@@ -49,6 +49,8 @@ Register `https://YOUR_APP_NAME.fly.dev/api/auth/callback/google` as a Google OA
 
 The SQL database stores image metadata, while image bytes currently live in local `.data/assets` (or your configured `PRIVATE_STORAGE_PATH`). Deploying the code does not upload these files. If production reuses the same Supabase database, pause local writes and active jobs during migration and copy all private image files to `/data/assets` on the Fly volume, preserving filenames. Use an authenticated private transfer such as Fly SSH/SFTP. Verify existing original photos, fabric/style uploads and past render results open after transfer. Do not put personal images in the Docker image, Git repository or public directory. Back up both database and files before migration.
 
+Keep development and production databases separate after migration. Changing `BETTER_AUTH_URL` does not isolate workers or storage. A local worker attached to the production database can claim a Fly job, while hash deduplication can return a file record whose bytes exist on another computer. The demo session exposed this split: the old local server was stopped, and the two affected public preset files were restored to the Fly volume and verified against their SHA-256 source hashes. The next render completed successfully. Do not run another local worker against this production database with a different private-file directory.
+
 Device-only IndexedDB libraries belong to the old browser origin. Before retiring the tunnel, sign in there and explicitly import the device library into the account if you want it on the new domain. Then transfer the resulting private files. Cookies from the tunnel do not sign users in on the new domain; users will sign in again.
 
 ## 5. Deploy and smoke-test
@@ -74,10 +76,10 @@ Verify before announcing the URL:
 
 Stop using the tunnel for production after these checks pass. Keep the previous working image available for rollback, and take database backups before future migrations because rolling back an image does not reverse schema changes.
 
-## Verification in this change
+## Preparation checks and current verification
 
 - Production frontend build and all 21 automated tests passed. Added readiness tests cover missing auth/worker and a disconnected database.
 - Browser QA with isolated account fixtures covered account initials/photo-failure fallback, account/install dialogs, accepting a PWA update, and responsive layouts at 320, 390, 430 and 1440 pixels. Fixed narrow-library overflow and mobile headline wrapping. Live profile-provider requests were not used.
-- `fly config validate --strict` passed locally. No Fly app, volume or deployment was created.
-- `docker build --tag presew-ui-polish:local .` passed. An isolated container with networking disabled loaded the server router, Better Auth and PostgreSQL dependency, verified public build files, and confirmed local `.env` and QA data were excluded. Full server startup against production PostgreSQL is still a launch check.
+- `fly config validate --strict` passed during preparation; the builder subsequently deployed `presew-studio`.
+- `docker build --tag presew-ui-polish:local .` passed. An isolated container with networking disabled loaded the server router, Better Auth and PostgreSQL dependency, verified public build files, and confirmed local `.env` and QA data were excluded. The later live Fly.io session verified production startup, sign-in and a completed YouCam render. Physical-phone testing and reviewer OAuth access remain separate checks.
 - Live Fly OAuth, storage migration and physical-device installation still require environment checks. No live provider requests were made for this change.

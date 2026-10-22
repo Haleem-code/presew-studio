@@ -1,5 +1,7 @@
 # Demo media source record
 
+**Demo video:** [PreSew on YouTube](https://youtu.be/g5kmeHbxNL0).
+
 Checked on 22 October 2026. The user requested a freely usable online full-body model photograph, the app's fabric presets, and a style preset. The recording must not use the builder's personal photo.
 
 | Role | Selected source | Credit | App reference |
@@ -18,4 +20,4 @@ The person input was downloaded from the Pexels image CDN at 1600 × 2400 pixels
 
 Include the three source-page links and the license link with this credit when uploading the video. Label the first input shot “Stock model · demonstration.” Keep source references distinct from the actual YouCam-generated result. Record real progress; if editing removes processing time, label that cut “Waiting time shortened.”
 
-The complete film remains pending authenticated app capture. The nine-second opening file is a framing/narration preview, not the completed three-minute demo.
+The complete film is `outputs/presew-demo/PreSew-YouTube-Final.mp4`: verified at 1920 × 1080, 30 fps and exactly 180 seconds, with burned-in captions and a separate SRT. It was recorded from the authenticated live Fly.io app. Failed trial screens are excluded. The earlier nine-second opening preview is superseded by this final export.
