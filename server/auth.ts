@@ -11,7 +11,7 @@ export async function makeAuth(config: Config, store: Store, migrate = false): P
   if (!migrate) await store.all(store.dialect === 'postgres' ? 'SELECT id FROM "presew_auth"."user" LIMIT 0' : 'SELECT id FROM "user" LIMIT 0');
   const { betterAuth } = await import('better-auth');
   const database = store.dialect === 'postgres'
-    ? new (await import('pg')).Pool({ connectionString: config.databaseURL, options: '-c search_path=presew_auth', max: 5 })
+    ? new (await import('pg')).Pool({ connectionString: config.databaseURL, options: '-c search_path=presew_auth', max: 3 })
     : store.authDatabase;
   const plugins: any[] = [];
   if (config.betterAuthApiKey) {

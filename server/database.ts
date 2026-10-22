@@ -12,7 +12,7 @@ export interface Store {
 const privateSQL = (statement: string) => statement.replace(/\b(studio_state|private_asset|render_job)\b/g, '"presew"."$1"');
 export async function openStore(config: Config): Promise<Store> {
   if (config.databaseURL) {
-    const sql = new SQL(config.databaseURL);
+    const sql = new SQL(config.databaseURL, { max: 3 });
     return {
       dialect: 'postgres', authDatabase: null,
       all: (statement, args = []) => { let index = 0; return sql.unsafe(privateSQL(statement).replace(/\?/g, () => `$${++index}`), args); },

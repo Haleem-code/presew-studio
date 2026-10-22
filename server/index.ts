@@ -19,7 +19,7 @@ let ticking = false;
 const interval = setInterval(async () => {
   if (!queue || ticking) return;
   ticking = true;
-  try { await queue.tick(); } catch { console.error('Render worker could not advance the queue. Recorded task IDs were retained.'); }
+  try { await queue.tick(); } catch (err) { console.error('Render worker could not advance the queue:', err); }
   finally { ticking = false; }
 }, 10000);
 console.log(`PreSew: ${config.baseURL} · ${db.dialect} database · Google ${auth ? 'ready' : 'not configured'} · YouCam ${queue ? 'configured' : 'not configured'}`);

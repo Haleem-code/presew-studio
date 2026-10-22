@@ -84,7 +84,7 @@ export function createRouter(config: Config, db: Store, auth: AuthService | null
       return new Response(request.method === 'HEAD' ? null : file, { headers: { 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff', ...(path.endsWith('.webmanifest') ? { 'Content-Type': 'application/manifest+json' } : {}) } });
     } catch (error) {
       if (error instanceof HttpError) return reply({ error: error.message }, error.status);
-      console.error('Request failed:', error instanceof Error ? error.name : 'UnknownError');
+      console.error('Request failed:', error);
       return reply({ error: 'The server could not complete this request. Please try again.' }, 500);
     }
   };
