@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+.data
+.git
+.openai
+node_modules
+dist
+outputs
+*.log

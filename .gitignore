@@ -1,0 +1,8 @@
+dist/
+node_modules/
+outputs/
+.env
+.env.*
+!.env.example
+.data/
+.openai/

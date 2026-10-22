@@ -1,0 +1,20 @@
+{
+  "name": "presew-studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun scripts/serve.ts",
+    "build": "bun scripts/build.ts",
+    "test": "bun test",
+    "pwa:check": "bun scripts/check-pwa.ts",
+    "db:migrate": "bun server/migrate.ts",
+    "setup:check": "bun scripts/check-setup.ts",
+    "start": "bun server/index.ts"
+  },
+  "dependencies": {
+    "@better-auth/infra": "0.4.17",
+    "better-auth": "1.7.12",
+    "pg": "8.16.3"
+  }
+}
