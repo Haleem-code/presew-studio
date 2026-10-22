@@ -121,14 +121,7 @@ The generated image and outfit plan are separate downloads. The current plan exp
 
 All YouCam requests run on the server. The browser submits the selected references and consent to PreSew; it never receives the provider API key.
 
-```mermaid
-flowchart LR
-  F[Fabric reference] --> G[YouCam garment preparation]
-  S[Style reference] --> G
-  G --> C[YouCam Clothes V4]
-  P[Original person photo] --> C
-  C --> R[Private outfit preview]
-```
+![Two-stage YouCam pipeline: fabric and style references prepare a garment, then Clothes V4 applies it to the original person photo to produce a private preview](docs/images/youcam-pipeline.png)
 
 | Stage | API used by the code | Role |
 | --- | --- | --- |
@@ -155,17 +148,7 @@ The two-stage workflow consumes provider units. Availability, latency, and resul
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  U[Mobile or desktop PWA] -->|Same-origin requests| B[Bun server + Better Auth]
-  U --> L[IndexedDB device library]
-  B --> D[(Supabase PostgreSQL)]
-  B --> S[Private image volume]
-  B --> Q[Persisted render queue]
-  Q --> Y[YouCam preparation + Clothes V4]
-  Y --> S
-  S -->|Authenticated image routes| U
-```
+![PreSew architecture: the PWA uses IndexedDB for device drafts and a Bun server with Better Auth for account requests; PostgreSQL stores state, a persisted worker calls YouCam, and authenticated routes serve private Fly Volume images](docs/images/architecture.png)
 
 | Layer | Implementation |
 | --- | --- |

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title description">
+  <title id="title">PreSew application architecture</title>
+  <desc id="description">A mobile or desktop PWA keeps device drafts in IndexedDB and exchanges authenticated requests with the Bun server. Better Auth handles Google sign-in. The server stores account and job state in Supabase PostgreSQL and advances a persisted render queue. The worker calls YouCam's two stages, saves results on a private Fly Volume, and serves private images through ownership-checked server routes.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#886471"/></marker>
+    <style>
+      text { font-family: 'Segoe UI', Arial, sans-serif; fill: #25231f; }
+      .eyebrow { font-size: 16px; font-weight: 700; letter-spacing: 2px; fill: #5c2d3c; }
+      .heading { font-size: 32px; font-weight: 600; }
+      .label { font-size: 23px; font-weight: 600; }
+      .note { font-size: 18px; fill: #6a605e; }
+      .light { fill: #fffaf5; }
+      .muted-light { fill: #e6d5dc; }
+      .edge { fill: none; stroke: #886471; stroke-width: 2.5; stroke-linejoin: round; marker-end: url(#arrow); }
+      .both { marker-start: url(#arrow); }
+    </style>
+  </defs>
+  <rect x="1" y="1" width="1198" height="758" rx="20" fill="#f6f3ed" stroke="#ded9d1"/>
+  <text x="42" y="46" class="eyebrow">PRESEW / APPLICATION ARCHITECTURE</text>
+  <text x="42" y="93" class="heading">One studio. A durable server workflow.</text>
+
+  <path d="M310 224H435" class="edge both"/>
+  <path d="M755 224H880" class="edge both"/>
+  <path d="M176 284V398" class="edge"/>
+  <path d="M595 284V398" class="edge"/>
+  <path d="M740 453H880" class="edge"/>
+  <path d="M1018 508V590" class="edge"/>
+  <path d="M880 633H390V314H500V284" class="edge"/>
+
+  <text x="327" y="177" class="note">Same-origin</text>
+  <text x="327" y="200" class="note">API + images</text>
+  <text x="772" y="177" class="note">Account +</text>
+  <text x="772" y="200" class="note">task state</text>
+  <text x="191" y="346" class="note">Device drafts</text>
+  <text x="450" y="330" class="note">Background</text>
+  <text x="450" y="355" class="note">job worker</text>
+  <text x="756" y="424" class="note">API tasks</text>
+  <text x="1035" y="554" class="note">Result</text>
+  <text x="426" y="613" class="note">Private images via authenticated routes</text>
+
+  <rect x="42" y="164" width="268" height="120" rx="14" fill="#fffdf9" stroke="#d7cec8"/>
+  <text x="66" y="207" class="label">Mobile / desktop PWA</text>
+  <text x="66" y="239" class="note">TypeScript browser app</text>
+  <text x="66" y="265" class="note">Studio and fitting room</text>
+
+  <rect x="435" y="164" width="320" height="120" rx="14" fill="#5c2d3c"/>
+  <text x="461" y="207" class="label light">Bun server + Better Auth</text>
+  <text x="461" y="239" class="note muted-light">Google OAuth and private API</text>
+  <text x="461" y="265" class="note muted-light">One Fly Machine</text>
+
+  <rect x="880" y="164" width="278" height="120" rx="14" fill="#fffdf9" stroke="#d7cec8"/>
+  <text x="904" y="207" class="label">Supabase PostgreSQL</text>
+  <text x="904" y="239" class="note">Library, sessions, and jobs</text>
+  <text x="904" y="265" class="note">Saved phases and task IDs</text>
+
+  <rect x="42" y="398" width="268" height="110" rx="14" fill="#fffdf9" stroke="#d7cec8"/>
+  <text x="66" y="442" class="label">IndexedDB</text>
+  <text x="66" y="474" class="note">Local device library</text>
+  <text x="66" y="499" class="note">Explicit import into account</text>
+
+  <rect x="450" y="398" width="290" height="110" rx="14" fill="#e9e0e3" stroke="#cdbbc2"/>
+  <text x="474" y="442" class="label">Render queue</text>
+  <text x="474" y="474" class="note">Leases, quotas, and recovery</text>
+  <text x="474" y="499" class="note">Runs on the Bun server</text>
+
+  <rect x="880" y="398" width="278" height="110" rx="14" fill="#5c2d3c"/>
+  <text x="904" y="442" class="label light">YouCam API</text>
+  <text x="904" y="474" class="note muted-light">Garment preparation</text>
+  <text x="904" y="499" class="note muted-light">Then Clothes V4 try-on</text>
+
+  <rect x="880" y="590" width="278" height="86" rx="12" fill="#fffdf9" stroke="#d7cec8"/>
+  <text x="904" y="627" class="label">Private Fly Volume</text>
+  <text x="904" y="655" class="note">Uploads and results</text>
+
+  <path d="M42 704H1158" stroke="#ded9d1"/>
+  <text x="42" y="735" class="note">Provider credentials stay server-side. Private images are served through authenticated app routes.</text>
+</svg>

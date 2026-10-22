@@ -126,7 +126,7 @@ describe('HTTP authentication, state and ownership', () => {
     const photo = saved.data.assets.find((a: any) => a.id === 'my-photo');
     expect(photo.image.startsWith('/api/assets/')).toBe(true);
     const fetched = await handler(request(photo.image, 'upload-user'));
-    expect(new Uint8Array(await fetched.arrayBuffer())).toEqual(png);
+    expect(new Uint8Array(await fetched.arrayBuffer() as ArrayBuffer)).toEqual(png);
   });
   test('allows owners to delete their completed try-ons and cleans up result assets', async () => {
     const handler = createRouter(config, db, auth, images, queue);
