@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { deflateSync } from 'node:zlib';
 
@@ -87,20 +88,24 @@ export async function generateAssets() {
   for (const key of Object.keys(palettes)) await writeFile(`public/assets/fabric-${key}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 240 240"><defs>${pattern(key)}<linearGradient id="shade"><stop stop-color="#fff" stop-opacity=".13"/><stop offset=".5" stop-color="#000" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".1"/></linearGradient></defs><rect width="240" height="240" fill="url(#fabric)"/><rect width="240" height="240" fill="url(#shade)"/></svg>`);
   for (const [shape, key] of [['dress', 'plum'], ['peplum', 'sun'], ['set', 'indigo'], ['evening', 'rose'], ['agbada', 'cocoa'], ['skirt', 'sage']]) await writeFile(`public/assets/style-${shape}.svg`, plate(shape, key));
   await writeFile('public/assets/studio-hero.svg', `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="900" viewBox="0 0 400 450"><rect width="400" height="450" fill="#e8d8da"/><path d="M40 450V170a140 140 0 0 1 280 0v280" fill="#f2e9e3"/><path d="M60 450V170a120 120 0 0 1 240 0v280" stroke="#c5a9ab" fill="none"/><path d="M-10 395q95-29 195 0t240 0" fill="none" stroke="#c3a5a3"/>${person(-40, 1.05, 'plum', 'dress')}${person(117, .93, 'sun', 'peplum')}<path d="m289 76 4 10 10 4-10 4-4 10-4-10-10-4 10-4Z" fill="#87516a"/><circle cx="330" cy="335" r="32" fill="#faf5e9"/><path d="m316 335 9 9 18-19" stroke="#87516a" stroke-width="2" fill="none"/><path d="M43 349q-21-45-28-74m26 65q12-32-2-49m-6 25q-24-9-24-26" stroke="#826d5c" fill="none"/></svg>`);
-  const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 1000 1000"><rect width="1000" height="1000" rx="170" fill="#5c2d3c"/><path d="${monogramPath}" transform="translate(-50 -50) scale(1.1)" fill="#f6f3ed" fill-rule="evenodd"/></svg>`;
-  await writeFile('public/assets/icon.svg', icon);
+  if (!existsSync('public/assets/logo.png')) {
+    const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 1000 1000"><rect width="1000" height="1000" rx="170" fill="#5c2d3c"/><path d="${monogramPath}" transform="translate(-50 -50) scale(1.1)" fill="#f6f3ed" fill-rule="evenodd"/></svg>`;
+    await writeFile('public/assets/icon.svg', icon);
+    for (const size of [192, 512]) {
+      const raster = appIcon(size);
+      await writeFile(`public/assets/icon-${size}.png`, raster);
+      await writeFile(`public/assets/app-icon-${size}.png`, raster);
+    }
+    await writeFile('public/assets/apple-touch-icon.png', appIcon(180));
+    const favicon = appIcon(32);
+    await writeFile('public/assets/favicon-32.png', favicon);
+    const ico = Buffer.alloc(22);
+    ico.writeUInt16LE(1, 2); ico.writeUInt16LE(1, 4);
+    ico[6] = 32; ico[7] = 32; ico.writeUInt16LE(1, 10); ico.writeUInt16LE(32, 12);
+    ico.writeUInt32LE(favicon.length, 14); ico.writeUInt32LE(22, 18);
+    await writeFile('public/favicon.ico', Buffer.concat([ico, favicon]));
+  }
   for (const size of [192, 512]) {
-    const raster = appIcon(size);
-    await writeFile(`public/assets/icon-${size}.png`, raster);
-    await writeFile(`public/assets/app-icon-${size}.png`, raster);
     await writeFile(`public/assets/maskable-icon-${size}.png`, appIcon(size, true));
   }
-  await writeFile('public/assets/apple-touch-icon.png', appIcon(180));
-  const favicon = appIcon(32);
-  await writeFile('public/assets/favicon-32.png', favicon);
-  const ico = Buffer.alloc(22);
-  ico.writeUInt16LE(1, 2); ico.writeUInt16LE(1, 4);
-  ico[6] = 32; ico[7] = 32; ico.writeUInt16LE(1, 10); ico.writeUInt16LE(32, 12);
-  ico.writeUInt32LE(favicon.length, 14); ico.writeUInt32LE(22, 18);
-  await writeFile('public/favicon.ico', Buffer.concat([ico, favicon]));
 }
