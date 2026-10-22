@@ -6,7 +6,7 @@
 
 PreSew is a mobile-first fashion studio that helps people visualize a custom outfit **before the fabric is cut**. Combine a person photo, a fabric reference, and a style you love; generate a personalized YouCam preview; then keep the references, notes, and optional measurements together for a clearer conversation with your tailor.
 
-**[Open the live app](https://presew-studio.fly.dev/)** · **[Watch the 3-minute YouTube demo](https://youtu.be/g5kmeHbxNL0)** · **[Source code](https://github.com/Haleem-code/presew-studio)** · [Hackathon](https://youcam-api-skin-ai-ecommerce.devpost.com/)
+**[Open the live app](https://presew-studio.fly.dev/)** · **[Watch the 3-minute YouTube demo](https://youtu.be/g5kmeHbxNL0)** · **[Source code](https://github.com/Haleem-code/presew-studio)** · [MIT license](LICENSE) · [Hackathon](https://youcam-api-skin-ai-ecommerce.devpost.com/)
 
 Built by **Haleem** for the **YouCam API Skin AI & eCommerce VTO Hackathon**. Project direction: **eCommerce VTO / custom fashion**. Runs in mobile and desktop browsers, with PWA installation support.
 
@@ -319,4 +319,4 @@ The demo model photograph is by **Dmitriy Steinke**, the fabric reference by **Y
 
 Additional catalog photography is credited in [catalog.ts](src/catalog.ts) and in the app. **Cormorant Garamond** and **Manrope** use the SIL Open Font License; license files are included in [public/fonts](public/fonts/). Brand assets are code/vector artwork generated for PreSew. Provider services and dependencies retain their own terms and licenses.
 
-**Source-code license:** a project-wide license has not yet been selected. Before a public hackathon submission, the owner must choose an appropriate source license or follow the organizer's private-repository sharing route. Third-party photographs, fonts, dependencies, and YouCam services remain subject to their separate terms.
+**Source-code license:** PreSew's original source code is released under the [MIT License](LICENSE), copyright (c) 2026 Haleem. Third-party photographs, fonts, dependencies, and YouCam services remain subject to their separate terms and are not relicensed by PreSew.
