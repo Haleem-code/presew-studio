@@ -1,2 +1,2 @@
-import './build';
-await import('../server/index');
+import "./build";
+await import("../server/index");

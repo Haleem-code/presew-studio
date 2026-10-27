@@ -11,11 +11,16 @@
     "pwa:check": "bun scripts/check-pwa.ts",
     "db:migrate": "bun server/migrate.ts",
     "setup:check": "bun scripts/check-setup.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "start": "bun server/index.ts"
   },
   "dependencies": {
     "@better-auth/infra": "0.4.17",
     "better-auth": "1.7.12",
     "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10"
   }
 }

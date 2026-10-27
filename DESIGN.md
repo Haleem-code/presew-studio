@@ -6,14 +6,14 @@ October 22, 2026. Implementation is in this app directory (`presew/`).
 
 An editorial fashion studio: generous space, clear image hierarchy, quiet surfaces, a wordmark without a decorative star, and a consistent outline icon family. Reference sites reviewed were [COS](https://www.cos.com/en-us) and [TOTEME](https://toteme.com/en-se). The layout and artwork implementation are PreSew's own; catalog photography retains its existing Pexels credits.
 
-| Role | Choice |
-| --- | --- |
-| Background | Warm ivory, `#F6F3ED` |
-| Text and primary controls | Dark ink, `#25231F` |
-| Accent and selected states | Oxblood, `#5C2D3C` |
-| Secondary text | Warm gray, `#6F6862` |
-| Display typography | Cormorant Garamond, regular and italic |
-| Controls and body typography | Manrope |
+| Role                         | Choice                                 |
+| ---------------------------- | -------------------------------------- |
+| Background                   | Warm ivory, `#F6F3ED`                  |
+| Text and primary controls    | Dark ink, `#25231F`                    |
+| Accent and selected states   | Oxblood, `#5C2D3C`                     |
+| Secondary text               | Warm gray, `#6F6862`                   |
+| Display typography           | Cormorant Garamond, regular and italic |
+| Controls and body typography | Manrope                                |
 
 Fonts are self-hosted as Latin WOFF2 subsets in `public/fonts/`, with their SIL Open Font License files. Sources: [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond) and [Manrope](https://fonts.google.com/specimen/Manrope). They are precached with the public PWA shell; runtime Google Fonts requests are not required. Other characters fall back to system fonts.
 

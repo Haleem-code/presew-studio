@@ -1,7 +1,9 @@
-import { resolve } from 'node:path';
+import { resolve } from "node:path";
 
-process.chdir(resolve(import.meta.dir, '..'));
-const fontBase64 = Buffer.from(await Bun.file('public/fonts/cormorant-latin.woff2').arrayBuffer()).toString('base64');
+process.chdir(resolve(import.meta.dir, ".."));
+const fontBase64 = Buffer.from(
+  await Bun.file("public/fonts/cormorant-latin.woff2").arrayBuffer(),
+).toString("base64");
 
 // 1. Square Icon / Favicon / App Icon with the editorial wordmark
 const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
@@ -90,8 +92,8 @@ const monogramSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 12
   <text x="56" y="88" text-anchor="middle" class="mark">p<tspan class="dot">.</tspan></text>
 </svg>`;
 
-await Bun.write('public/assets/icon.svg', iconSvg);
-await Bun.write('public/assets/logo.svg', logoSvg);
-await Bun.write('public/assets/favicon.svg', monogramSvg);
+await Bun.write("public/assets/icon.svg", iconSvg);
+await Bun.write("public/assets/logo.svg", logoSvg);
+await Bun.write("public/assets/favicon.svg", monogramSvg);
 
-console.log('Saved public/assets/icon.svg, public/assets/logo.svg, and public/assets/favicon.svg');
+console.log("Saved public/assets/icon.svg, public/assets/logo.svg, and public/assets/favicon.svg");
